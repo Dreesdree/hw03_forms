@@ -8,7 +8,7 @@ class AboutAuthorView(TemplateView):
         context = super().get_context_data(**kwargs)
 
         context['just_title'] = 'Страница об авторе'
-        context['just_text'] = ('Нау́ка — деятельность, направленная на' 
+        context['just_text'] = ('Нау́ка — деятельность, направленная на'
                                 'выработку и систематизацию объективных'
                                 'знаний о действительности.'
                                 )
