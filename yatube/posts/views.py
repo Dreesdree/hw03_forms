@@ -16,7 +16,7 @@ def index(request):
     return render(request,
                   'posts/index.html',
                   {'page_obj': get_one_page(request, Post.objects.all())}
-    )
+                  )
 
 
 def group_posts(request, slug):
