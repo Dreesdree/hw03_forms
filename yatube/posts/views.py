@@ -6,6 +6,7 @@ from posts.forms import PostForm
 from posts.models import Group, Post, User
 from yatube.settings import PAGE
 
+
 def get_one_page(request, posts):
     paginator = Paginator(posts, PAGE)
     page_number = request.GET.get('page')
