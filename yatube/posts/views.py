@@ -4,24 +4,25 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from posts.forms import PostForm
 from posts.models import Group, Post, User
-
+from yatube.settings import PAGE
 
 def get_one_page(request, posts):
-    paginator = Paginator(posts, 10)
+    paginator = Paginator(posts, PAGE)
     page_number = request.GET.get('page')
     return paginator.get_page(page_number)
 
 
 def index(request):
-    return render(request,
-                  'posts/index.html',
-                  {'page_obj': get_one_page(request, Post.objects.all())}
-                  )
+    return render(
+        request,
+        'posts/index.html',
+        {'page_obj': get_one_page(request, Post.objects.all())}
+    )
 
 
 def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
-    posts = group.Posts.all()
+    posts = group.posts.all()
     page_obj = get_one_page(request, posts)
     return render(
         request,
@@ -31,8 +32,8 @@ def group_posts(request, slug):
 
 
 def profile(request, username):
-    author = User.objects.get(username=username)
-    posts = author.Posts.all()
+    author = get_object_or_404(User, username=username)
+    posts = author.posts.all()
     page_obj = get_one_page(request, posts)
     return render(
         request,
@@ -50,9 +51,10 @@ def post_detail(request, post_id):
 def post_create(request):
     form = PostForm(request.POST or None)
     if form.is_valid():
-        form.instance.author = request.user
-        form.save()
-        return redirect('Posts:profile', username=request.user.username)
+        post = form.save(commit=False)
+        post.author = request.user
+        post.save()
+        return redirect('posts:profile', request.user.username)
     context = {
         'form': form,
     }
@@ -67,7 +69,7 @@ def post_edit(request, post_id):
     form = PostForm(request.POST or None, instance=post)
     if form.is_valid():
         form.save()
-        return redirect('Posts:post_detail', post_id=post_id)
+        return redirect('posts:post_detail', post_id=post_id)
     context = {
         'form': form,
     }
