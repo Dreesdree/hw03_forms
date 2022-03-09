@@ -5,7 +5,7 @@
   <p>
     {{ group.description|linebreaks }}
   </p>
-{% for post in posts %}
+{% for post in group.posts.all %}
   <article>
     <ul>
       <li>
